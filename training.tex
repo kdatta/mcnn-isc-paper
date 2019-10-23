@@ -1,0 +1,37 @@
+%!TEX root=main.tex
+\begin{section}{Large batch training}
+	\label{sec:training}
+	Synchronous gradient descent and data-level parallelism are fundamental concepts to training a deep neural network. In this domain, the most common algorithm used for training is stochastic gradient descent (SGD), which exploits the fact that activation functions in a neural network are differentiable with respect to their weights. During training, batches of data are run through the network. This process is referred to as \emph{forward propagation}.  A loss function $E$ is computed at each training iteration, which quantifies how accurately the network was able to classify the input. The SGD algorithm then computes the gradient $\nabla_{W}(E)$ of the loss function with respect to the current weights $W$. On the basis of the gradients, weights are updated according equation \ref{eq:sgd}, where $W_{t+1}$ are the updated weights, $W_{t}$ are the weights prior to the adjustment (or previous iteration), and $\lambda$ is a tunable parameter called the learning rate (LR).
+%$\frac{\delta}{\delta w}(E)$ 
+	\begin{equation}
+		W_{t+1} = W_{t} - \lambda \nabla_{W} E
+		\label{eq:sgd}
+	\end{equation}
+
+	\noindent Since each neural network layer is a differentiable function of the layer preceding it, gradients are computed layer-by-layer, moving from output to input in a process called backpropagation. Finally, the weights in the network are updated according to the computed gradient, and both forward and backpropagation are  repeated with a new batch of data. We continue repeating these procedures until the network has reached a satisfactory degree of accuracy on a hold-out validation data set. Training can require running millions of iterations of this process on a given dataset. The most popular approach to speeding up network training makes use of a data-parallel algorithm called synchronous SGD \cite{Robbins1951}. Synchronous SGD works by replicating SGD across compute nodes, each working on different batches of training data simultaneously. We refer to these replicas as \textit{workers}. A key requirement for synchronous SGD is for information to be synchronized and aggregated across all computing instances at each iteration. The update equation is show in equation \ref{eq:syncsgd}, where $B$ denotes the batch sampled from the training data, $n$ is the size of the batch.
+
+	\begin{equation}
+		W_{t+1} = W_{t} - \lambda \frac{1}{n} \sum_{x \in B} \nabla_{W}E(x)
+		\label{eq:syncsgd}
+	\end{equation}
+
+	With $k$ workers each training with $B$ batches and learning rate $\lambda'$, we updates the weights according to
+
+	\begin{equation}
+		W_{t+1} = W_{t} - \lambda' \frac{1}{kn} \sum_{j < k} \sum_{x \in B_j} \nabla_{W}E(x)
+		\label{eq:syncsgdmw}
+	\end{equation}
+
+	Thus, if we adjust the learning rate by $k$, the weight update equation stays consistent with the synchronous SGD update rule, helping the model to converge without changing the hyper-parameters. We refer to $n$ or $|B|$ as the \textit{local batch size}, and $kn$ as the \textit{global batch size}.
+
+	\begin{subsection}{Learning rate schedule}
+		\label{sec:lr}
+		\noindent In addition to scaling the model's learning rate parameter (LR) with respect to the batch size, others \cite{You2017} have observed that gradually increasing it during initial epochs, and subsequently decaying it helps to the model to converge faster. This implies that LR is changed between training iterations, depending on the number of workers, the model, and dataset. We follow the same methodology. We start to train with LR initialized to a low value of $\lambda = 0.001$. In the first few epochs, it is gradually increased to the scaled value of $k\lambda$ and then adjusted following a polynomial decay, with momentum SGD (momentum=0.9).\\\\
+\noindent Reaching network convergence during training is not guaranteed--the process is sensitive to LR values and features in the data. Scaling this process out to large batch sizes on multiple workers concurrently has the same considerations. If the per-iteration batch size is too large, fewer updates per epoch are required (since an epoch is, by definition, a complete pass through the training data set), which can either result in the model diverging, or it requiring additional epochs to converge (relative to the non-distributed case), defeating the purpose of scaling to large batch sizes. Thus, demonstrating scaled-out performance with large batches without first demonstrating convergence is meaningless. Instead, we measure the time needed to reach state of the art accuracy or TTT. The ingestion method for each worker ensures that each minibatch contains randomly-shuffled data from the different classes.
+	\end{subsection}
+\end{section}
+
+
+
+
+

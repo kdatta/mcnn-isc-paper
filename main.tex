@@ -1,0 +1,127 @@
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.20 of 2017/10/04
+%
+\documentclass[runningheads]{llncs}
+%
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following line
+% to display URLs in blue roman font according to Springer's eBook style:
+% \renewcommand\UrlFont{\color{blue}\rmfamily}
+
+\usepackage[noadjust]{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{textcomp}
+\usepackage{array}
+\usepackage{float}
+\usepackage{gensymb}
+\usepackage[inline]{enumitem}
+\usepackage{hyperref}
+\usepackage{filecontents, pgfplots}
+%\usepackage{pgf-pie}
+\pgfplotsset{width=10cm,compat=1.9}
+\usepgfplotslibrary{external}
+\usepackage{tcolorbox}
+%\tikzexternalize
+%\usetikzlibrary{patterns}
+\usepackage{subcaption}
+\usepackage{cleveref}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage[bottom]{footmisc}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\rfoot{\thepage}
+
+
+\captionsetup[subfigure]{subrefformat=simple,labelformat=simple}
+\renewcommand\thesubfigure{(\alph{subfigure})}
+\setcounter{chapter}{1}
+
+\newcommand\blfootnote[1]{%
+	\begingroup
+	\renewcommand\thefootnote{}\footnote{#1}%
+	\addtocounter{footnote}{-1}%
+	\endgroup
+}
+
+\begin{document}
+%
+\title{Training Multiscale-CNN for Large Microscopy Image Classification in One Hour}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+%\author{Kushal Datta\inst{*,1}\orcidID{0000-0003-1608-6040} \and 
+%Imtiaz Hossain\inst{*,2}\orcidID{0000-0001-6747-5906} \and
+%Kyle Ambert\inst{1}\orcidID{????--????-????-????} \and
+%Sun Choi\inst{1}\orcidID{0000-0003-4276-7560} \and 
+%Vikram Saletore\inst{1}\orcidID{0000-0001-8642-539X} \and
+%William J. Godinez\inst{3}\orcidID{0000-0003-4753-4942} \and
+%Xian Zhang\inst{2}\orcidID{0000-0002-7337-747X}}
+%
+\author{Kushal Datta\inst{*,1}\orcidID{0000-0003-1608-6040} \and 
+Imtiaz Hossain\inst{*,2}\orcidID{0000-0001-6747-5906} \and
+Sun Choi\inst{1}\orcidID{0000-0003-4276-7560} \and 
+Vikram Saletore\inst{1}\orcidID{0000-0001-8642-539X} \and
+Kyle Ambert\inst{1}\orcidID{0000-0002-1688-4408} \and
+William J. Godinez\inst{3}\orcidID{0000-0003-4753-4942} \and
+Xian Zhang\inst{2}\orcidID{0000-0002-7337-747X}}
+%
+%\authorrunning{F. Author et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+\institute{Artificial Intelligence Products Group, Intel Corporation, USA 
+\and
+Novartis Institutes for Biomedical Research, Basel, Switzerland\\
+\and
+Novartis Institutes for Biomedical Research, Emeryville, CA, USA\\
+%$^{*}$ To whom correspondence should be addressed. \\
+%$^{*}$These authors have made equal contributions to the paper.\\
+\email{\{kushal.datta,sun.choi,vikram.a.saletore,kyle.h.ambert\}@intel.com}\\
+\email{\{imtiaz.hossain,william\_jose.godinez\_navarro,xian-1.zhang\}@novartis.com}}
+
+\maketitle              % typeset the header of the contribution
+
+%
+	\begin{abstract} 
+		Existing approaches to train neural networks that use large images require to either crop or down-sample data during pre-processing, use small batch sizes, or split the model across devices mainly due to the prohibitively limited memory capacity available on GPUs and emerging accelerators. These techniques often lead to longer time to convergence or time to train (TTT), and in some cases, lower model accuracy. CPUs, on the other hand, can leverage significant amounts of memory. While much work has been done on parallelizing neural network training on multiple CPUs, little attention has been given to tune neural network training with large images on CPUs. In this work, we train a multi-scale convolutional neural network (M-CNN) to classify large biomedical images for high content screening in one hour. The ability to leverage large memory capacity on CPUs enables us to scale to larger batch sizes without having to crop or down-sample the input images. In conjunction with large batch sizes, we find a generalized methodology of linearly scaling of learning rate and train M-CNN to state-of-the-art (SOTA) accuracy of 99\% within one hour. We achieve fast time to convergence using 128 two socket Intel® Xeon® 6148 processor nodes with 192GB DDR4 memory connected with 100Gbps Intel® Omnipath architecture.
+		
+		\let\thefootnote\relax\footnotetext{\linebreak\emph{* To whom correspondence should be addressed. \linebreak * These authors have made equal contributions to the paper.}}
+		%\blfootnote{A footnote without marker}
+	\end{abstract}
+
+%\let\thefootnote\relax\footnote{There is no number in this footnote}
+
+	
+	% Source sections from separate .tex files...
+	\input{introduction.tex}
+	\input{mcnn_model.tex}
+	\input{training.tex}
+	\input{dataset.tex}
+	\input{data.tex}
+	\input{performance}
+	\input{discussion}
+
+	%\begin{section}*{Acknowledgements}
+		%We would like to acknowledge Wolfgang Zipfel from the Novartis Institutes for Biomedical Research, Basel, Switzerland, Michael Derby and Michael Steeves from the Novartis Institutes for Biomedical Research, Cambridge, MA, USA, and Steve Litster from The Markley Group for their contributions towards this work. Our thanks also to Deepthi Karkada, from Intel, for developing the first M-CNN code in TensorFlow and Vivek Menon, also from Intel, for calculating the total size of weights and activations for the M-CNN topology. We also wish to acknowledge Kristina Kermanshahche, Mike Demshki, Patrick Messmer, Andy Bartley, Bruno Riva and Hema Chamraj from Intel, for their contributions to this work.
+		%The authors also acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: http://www.tacc.utexas.edu. \\
+		
+	%\end{section}
+	
+	\begin{section}*{Conflicts of interest}
+	Intel\textregistered{} Xeon\textregistered{} Gold 6148 processor, Intel\textregistered{} OPA and Intel\textregistered{} SSD storage drive are registered products of Intel Corporation. The authors declare no other conflicts of interest.
+		
+	\end{section}
+	\bibliographystyle{IEEEtran}
+	\bibliography{bibliography}
+\end{document}
+
