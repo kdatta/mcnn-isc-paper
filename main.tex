@@ -95,7 +95,7 @@ Novartis Institutes for Biomedical Research, Emeryville, CA, USA\\
 	\begin{abstract} 
 		Existing approaches to train neural networks that use large images require to either crop or down-sample data during pre-processing, use small batch sizes, or split the model across devices mainly due to the prohibitively limited memory capacity available on GPUs and emerging accelerators. These techniques often lead to longer time to convergence or time to train (TTT), and in some cases, lower model accuracy. CPUs, on the other hand, can leverage significant amounts of memory. While much work has been done on parallelizing neural network training on multiple CPUs, little attention has been given to tune neural network training with large images on CPUs. In this work, we train a multi-scale convolutional neural network (M-CNN) to classify large biomedical images for high content screening in one hour. The ability to leverage large memory capacity on CPUs enables us to scale to larger batch sizes without having to crop or down-sample the input images. In conjunction with large batch sizes, we find a generalized methodology of linearly scaling of learning rate and train M-CNN to state-of-the-art (SOTA) accuracy of 99\% within one hour. We achieve fast time to convergence using 128 two socket Intel® Xeon® 6148 processor nodes with 192GB DDR4 memory connected with 100Gbps Intel® Omnipath architecture.
 		
-		\let\thefootnote\relax\footnotetext{\linebreak\emph{* To whom correspondence should be addressed. \linebreak * These authors have made equal contributions to the paper.}}
+    \let\thefootnote\relax\footnotetext{\linebreak\emph{* Published in International SuperComputing High Performance 2019 Workshops. \linebreak * Authors made equal contributions to the paper.}}
 		%\blfootnote{A footnote without marker}
 	\end{abstract}
 
@@ -111,16 +111,13 @@ Novartis Institutes for Biomedical Research, Emeryville, CA, USA\\
 	\input{performance}
 	\input{discussion}
 
-	%\begin{section}*{Acknowledgements}
-		%We would like to acknowledge Wolfgang Zipfel from the Novartis Institutes for Biomedical Research, Basel, Switzerland, Michael Derby and Michael Steeves from the Novartis Institutes for Biomedical Research, Cambridge, MA, USA, and Steve Litster from The Markley Group for their contributions towards this work. Our thanks also to Deepthi Karkada, from Intel, for developing the first M-CNN code in TensorFlow and Vivek Menon, also from Intel, for calculating the total size of weights and activations for the M-CNN topology. We also wish to acknowledge Kristina Kermanshahche, Mike Demshki, Patrick Messmer, Andy Bartley, Bruno Riva and Hema Chamraj from Intel, for their contributions to this work.
-		%The authors also acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: http://www.tacc.utexas.edu. \\
+  \noindent
+  \\ \textbf{Acknowledgements.} We would like to acknowledge Wolfgang Zipfel from the Novartis Institutes for Biomedical Research, Basel, Switzerland; Michael Derby, Michael Steeves and Steve Litster from the Novartis Institutes for Biomedical Research, Cambridge, MA, USA; Deepthi Karkada, Vivek Menon, Kristina Kermanshahche, Mike Demshki, Patrick Messmer, Andy Bartley, Bruno Riva and Hema Chamraj from Intel Corporation, USA, for their contributions to this work. The authors also acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: http://www.tacc.utexas.edu. \\
+
+	\linebreak
+  \noindent
+	\textbf{Conflicts of interest.} Intel\textregistered{} Xeon\textregistered{} Gold 6148 processor, Intel\textregistered{} OPA and Intel\textregistered{} SSD storage drive are registered products of Intel Corporation. The authors declare no other conflicts of interest.
 		
-	%\end{section}
-	
-	\begin{section}*{Conflicts of interest}
-	Intel\textregistered{} Xeon\textregistered{} Gold 6148 processor, Intel\textregistered{} OPA and Intel\textregistered{} SSD storage drive are registered products of Intel Corporation. The authors declare no other conflicts of interest.
-		
-	\end{section}
 	\bibliographystyle{IEEEtran}
 	\bibliography{bibliography}
 \end{document}
